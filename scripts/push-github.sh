@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Push to GitHub using GITHUB_TOKEN from .env (token is not saved in git config).
 #
-# Setup:
-#   cp .env.example .env
-#   # edit .env and set GITHUB_TOKEN=ghp_...
+# Create .env at repo root with:
+#   GITHUB_TOKEN=ghp_...
+#   GITHUB_USERNAME=haroun97   # optional
+#   GITHUB_REPO=Noahlabs       # optional
 #
-# Usage (from repo root):
-#   ./scripts/push-github.sh
+# Usage: ./scripts/push-github.sh
 #
 set -euo pipefail
 
@@ -14,8 +14,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 if [[ ! -f .env ]]; then
-  echo "Error: .env not found. Run: cp .env.example .env" >&2
-  echo "Then set GITHUB_TOKEN to your personal access token." >&2
+  echo "Error: .env not found. Create .env with GITHUB_TOKEN=your_pat" >&2
   exit 1
 fi
 
