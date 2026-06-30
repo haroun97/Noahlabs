@@ -1,35 +1,43 @@
-# NOAH LABS TAKE HOME CHALLENGE
+# Noah Labs Take-Home Challenge
 
-Solutions for the Noah Labs backend and frontend challenges.
+Solutions for the **backend** (PostgreSQL task pool) and **frontend** (React + MUI) coding challenges.
 
-## Projects
+## Overview
 
-| Challenge | Folder | Quick start |
+### Backend — PostgreSQL task pool
+
+A typed job queue where producers enqueue tasks and multiple consumers claim work in parallel without double-processing.
+
+- **API:** `add_task()` / `get_task()` with topic-specific payloads (`predict_voice`, `raise_voice_alert`)
+- **Concurrency:** `SELECT … FOR UPDATE SKIP LOCKED`; claim commits before handler work
+- **Stack:** Python 3.12, PostgreSQL 16, SQLAlchemy, Pydantic, Alembic, Docker
+- **Guarantee:** at-most-once claiming; failed tasks are retained, not reprocessed
+
+### Frontend — People table & details panel
+
+A React app that fixes table layout issues and fetches per-person details with full async state handling.
+
+- **Task 1:** table padding and status-column alignment
+- **Task 2:** per-row “View details” with loading, error, not-found, and success states + race-condition guard
+- **Stack:** React 19, TypeScript, MUI, Biome
+
+## Quick start
+
+| Project | Directory | Start here |
 |---|---|---|
-| **Backend** — PostgreSQL task pool | [`noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/`](noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/) | `CLEAN_ALL=1 ./scripts/reviewer-demo.sh` |
-| **Frontend** — React + MUI | [`noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/`](noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/) | `npm install && npm run dev` |
+| Backend | [`noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/`](noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/) | `CLEAN_ALL=1 CONSUMERS=4 TASKS=20 ./scripts/reviewer-demo.sh` |
+| Frontend | [`noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/`](noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/) | `npm install && npm run dev` → http://localhost:5173 |
+
+See each folder’s **README** for full setup, options, and troubleshooting.
 
 ## CI
 
-GitHub Actions runs backend tests (lint, mypy, PostgreSQL suite, Docker build) and frontend lint/build on every push.
+GitHub Actions on every push: backend lint, mypy, ~50 PostgreSQL tests, Docker build; frontend lint and production build.
 
-## Push to GitHub (personal access token)
+## Repository layout
 
-1. Copy the env template and add your token (`.env` is gitignored):
-
-   ```bash
-   cp .env.example .env
-   # edit .env → GITHUB_TOKEN=ghp_your_token_here
-   ```
-
-2. Push:
-
-   ```bash
-   ./scripts/push-github.sh
-   ```
-
-   Token needs **repo** scope. It is read from `.env` only for the push command and is **not** stored in `git config`.
-
----
-
-Please note that you must complete both challenges. Once you have finished, compress your solutions into a single zip file (your_full_name.zip) and send it back to our email at apply@noah-labs.com.
+```
+noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/   # task pool
+noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/                      # React app
+document/                                                                                 # planning notes (optional)
+```
