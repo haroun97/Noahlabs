@@ -248,11 +248,11 @@ function App() {
 									renders the existing <strong>PersonDetails</strong> component.
 								</li>
 								<li>
-									<strong>Network effects:</strong> Requests
-									may finish in a different order. For example, person A may
-									finish after person B even though B was clicked last. Each
-									request receives an increasing number, and only the latest
-									request may update the UI.
+									<strong>Network effects:</strong> Requests may finish in a
+									different order. For example, person A may finish after person
+									B even though B was clicked last. Each request receives an
+									increasing number, and only the latest request may update the
+									UI.
 								</li>
 								<li>
 									<strong>Unmounting:</strong> If the component is removed
@@ -270,10 +270,10 @@ function App() {
 								each person.
 							</p>
 							<p>
-								With a real API that supports <strong>AbortSignal</strong>, it could
-								also cancel an outdated request. The provided mock function
-								cannot be cancelled, so this solution safely ignores responses
-								from older requests.
+								With a real API that supports <strong>AbortSignal</strong>, it
+								could also cancel an outdated request. The provided mock
+								function cannot be cancelled, so this solution safely ignores
+								responses from older requests.
 							</p>
 						</Typography>
 					</Box>
@@ -303,13 +303,13 @@ function App() {
 									loading, success, error, not-found, and race-condition cases.
 								</li>
 								<li>
-									<strong>Error handling:</strong> Error boundaries for rendering
-									failures and a consistent strategy for API and unexpected
-									application errors.
+									<strong>Error handling:</strong> Error boundaries for
+									rendering failures and a consistent strategy for API and
+									unexpected application errors.
 								</li>
 								<li>
-									<strong>Security:</strong> Authentication, authorization, secure
-									configuration, and careful handling of personal and
+									<strong>Security:</strong> Authentication, authorization,
+									secure configuration, and careful handling of personal and
 									health-related data.
 								</li>
 								<li>
@@ -317,9 +317,9 @@ function App() {
 									tracking, monitoring, and performance metrics.
 								</li>
 								<li>
-									<strong>Design system:</strong> Shared themes and design tokens
-									instead of hardcoded colors, with consistent spacing and
-									component styles.
+									<strong>Design system:</strong> Shared themes and design
+									tokens instead of hardcoded colors, with consistent spacing
+									and component styles.
 								</li>
 								<li>
 									<strong>Accessibility:</strong> Accessible names for row
@@ -331,9 +331,9 @@ function App() {
 									text and i18n support if multiple languages are required.
 								</li>
 								<li>
-									<strong>Tooling and CI:</strong> Automated type checking, Biome
-									checks, tests, and production builds on every pull request,
-									with environment-based configuration.
+									<strong>Tooling and CI:</strong> Automated type checking,
+									Biome checks, tests, and production builds on every pull
+									request, with environment-based configuration.
 								</li>
 								<li>
 									<strong>Performance:</strong> Pagination or virtualization for
