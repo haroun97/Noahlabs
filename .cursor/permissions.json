@@ -1,0 +1,58 @@
+{
+  // GTAP autonomous-run config.
+  // This pre-approves common dev commands so the Agent does not prompt per command.
+  // NOTE: The Run Mode itself is UI-only. To run with ZERO prompts, set:
+  //   Cursor Settings -> Agents -> Run Mode -> "Run Everything".
+  // With "Allowlist" mode, only the prefixes below run without approval.
+  "terminalAllowlist": [
+    "make",
+    "docker",
+    "docker compose",
+    "docker-compose",
+    "git",
+    "ls",
+    "cat",
+    "echo",
+    "mkdir",
+    "cp",
+    "mv",
+    "rm",
+    "chmod",
+    "bash",
+    "sh",
+    "./run.sh",
+    "python",
+    "python3",
+    "pip",
+    "pip3",
+    "uv",
+    "pytest",
+    "ruff",
+    "black",
+    "alembic",
+    "node",
+    "npm",
+    "npx",
+    "pnpm",
+    "yarn",
+    "vite",
+    "eslint",
+    "prettier",
+    "mvn",
+    "java",
+    "kubectl",
+    "helm",
+    "terraform",
+    "az",
+    "curl"
+  ],
+  "mcpAllowlist": [],
+  "autoRun": {
+    "allow_instructions": [
+      "Local development commands for the GTAP monorepo (docker compose, make, tests, linters, builds) are safe to run automatically."
+    ],
+    "block_instructions": [
+      "Prompt before any 'docker compose down -v', volume/data deletion, 'terraform apply/destroy', 'kubectl delete', or 'az' commands that modify cloud resources."
+    ]
+  }
+}

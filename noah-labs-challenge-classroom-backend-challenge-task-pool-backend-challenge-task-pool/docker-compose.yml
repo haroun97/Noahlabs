@@ -1,0 +1,125 @@
+# Docker Compose stack for the task pool.
+#
+# Typical workflow (run ONE command at a time, wait for each to finish):
+#   cp .env.example .env
+#   docker-compose up -d db
+#   docker-compose ps                    # must show 0.0.0.0:5433->5432/tcp
+#   docker-compose run --rm migrate
+#   docker-compose run --rm producer     # or: ... producer --topic all --count 20
+#   docker-compose up --scale consumer=4 consumer
+#   docker-compose run --rm admin counts
+#
+# Use "docker-compose" (hyphen), NOT "docker compose" unless you installed docker-compose-v2.
+
+networks:
+  taskpool:
+    driver: bridge
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # db — PostgreSQL database (runs continuously)
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-taskpool}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-taskpool}
+      POSTGRES_DB: ${POSTGRES_DB:-taskpool}
+    ports:
+      # host:container — 5433 on your machine → 5432 inside the container
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-taskpool} -d ${POSTGRES_DB:-taskpool}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - taskpool
+
+  # ---------------------------------------------------------------------------
+  # migrate — one-shot: create tables (Alembic)
+  # ---------------------------------------------------------------------------
+  migrate:
+    build:
+      context: .
+    image: taskpool:latest
+    command: ["migrate"]
+    env_file:
+      - .env
+    environment:
+      TASKPOOL_ROLE: migrate
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://taskpool:taskpool@db:5432/taskpool}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - taskpool
+    restart: "no"
+
+  # ---------------------------------------------------------------------------
+  # admin — one-shot: inspect tasks
+  # Run: docker-compose run --rm admin counts
+  # ---------------------------------------------------------------------------
+  admin:
+    image: taskpool:latest
+    build:
+      context: .
+    command: ["admin", "counts"]
+    env_file:
+      - .env
+    environment:
+      TASKPOOL_ROLE: admin
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://taskpool:taskpool@db:5432/taskpool}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - taskpool
+    restart: "no"
+
+  # ---------------------------------------------------------------------------
+  # producer — one-shot: insert sample tasks
+  # ---------------------------------------------------------------------------
+  producer:
+    image: taskpool:latest
+    build:
+      context: .
+    command: ["producer", "--topic", "all", "--count", "20"]
+    env_file:
+      - .env
+    environment:
+      TASKPOOL_ROLE: producer
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://taskpool:taskpool@db:5432/taskpool}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - taskpool
+    restart: "no"
+
+  # ---------------------------------------------------------------------------
+  # consumer — long-running worker loop
+  # Run: docker-compose up --scale consumer=4 consumer
+  # ---------------------------------------------------------------------------
+  consumer:
+    image: taskpool:latest
+    build:
+      context: .
+    command: ["consumer"]
+    env_file:
+      - .env
+    environment:
+      TASKPOOL_ROLE: consumer
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://taskpool:taskpool@db:5432/taskpool}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - taskpool
+    restart: unless-stopped
+
+volumes:
+  pgdata:

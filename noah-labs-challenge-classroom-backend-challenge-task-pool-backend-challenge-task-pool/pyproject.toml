@@ -1,0 +1,89 @@
+[project]
+name = "taskpool"
+version = "0.1.0"
+description = "PostgreSQL-backed task pool with safe concurrent claiming (FOR UPDATE SKIP LOCKED)."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "sqlalchemy>=2.0.36,<2.1",
+    "psycopg[binary]>=3.2.3,<3.3",
+    "pydantic>=2.10.0,<3.0",
+    "pydantic-settings>=2.7.0,<3.0",
+    "alembic>=1.14.0,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0,<9.0",
+    "ruff>=0.8.0,<1.0",
+    "mypy>=1.13.0,<2.0",
+]
+
+[project.scripts]
+taskpool-producer = "taskpool.cli.producer:main"
+taskpool-consumer = "taskpool.cli.consumer:main"
+taskpool-admin = "taskpool.cli.admin:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+taskpool = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # comprehensions
+    "SIM", # flake8-simplify
+    "TID", # tidy imports
+    "RUF",
+]
+ignore = [
+    "B008", # function call in default argument (typer/argparse patterns)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B011"]
+"migrations/**" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+no_implicit_reexport = true
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+explicit_package_bases = true
+namespace_packages = true
+exclude = ["migrations/"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: tests that require a real PostgreSQL database",
+    "concurrency: concurrency tests that require a real PostgreSQL database",
+    "e2e: end-to-end tests that require a real PostgreSQL database",
+]
+filterwarnings = ["error::DeprecationWarning"]
+addopts = "-ra"

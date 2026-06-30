@@ -1,0 +1,11 @@
+# Environment / secrets
+.env
+.env.local
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Cursor (optional local rules — keep if you want them in repo)
+# .cursor/
