@@ -1,5 +1,0 @@
----
-alwaysApply: true
----
-
-docker-compose up consumer

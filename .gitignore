@@ -2,10 +2,18 @@
 .env
 .env.local
 
+# Internal planning / review notes (not part of the challenge brief)
+document/
+
+# Dependencies (reinstall with npm install / pip / Docker)
+node_modules/
+.venv/
+venv/
+
 # OS / editor
 .DS_Store
 .idea/
 .vscode/
 
-# Cursor (optional local rules — keep if you want them in repo)
-# .cursor/
+# Cursor IDE (local rules — not part of the challenge)
+.cursor/

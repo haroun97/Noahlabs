@@ -39,5 +39,4 @@ GitHub Actions on every push: backend lint, mypy, ~50 PostgreSQL tests, Docker b
 ```
 noah-labs-challenge-classroom-backend-challenge-task-pool-backend-challenge-task-pool/   # task pool
 noah-labs-challenge-classroom-frontend-challenge-frontend-challenge/                      # React app
-document/                                                                                 # planning notes (optional)
 ```

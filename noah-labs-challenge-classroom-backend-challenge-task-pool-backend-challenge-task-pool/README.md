@@ -173,7 +173,7 @@ Key source locations:
 SUITE=all ./scripts/run-tests.sh    # full suite (starts Postgres in Docker)
 ```
 
-**CI:** GitHub Actions runs lint, mypy, unit tests, the full PostgreSQL suite, and a Docker build on every push/PR (see `.github/workflows/ci.yml`).
+**CI:** GitHub Actions runs lint, mypy, unit tests, the full PostgreSQL suite, and a Docker build on every push/PR (see the repo root `.github/workflows/ci.yml`).
 
 ---
 
